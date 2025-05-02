@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Sort Activity</title>
+    <!-- Bootstrap 3 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- jQuery UI for drag and drop -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<body>
+
+<div class="container-fluid">
+    <!-- Instructions -->
+    <div class="instructions alert alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close" style="right:10px;color:#000!important;">&times;</a>
+        <h4><i class="fa fa-info-circle"></i> Instructions</h4>
+        <p>Drag and drop items from the "Items" section to create new categories. A new category will be created automatically when you drop an item into the empty categories area. You can rename categories by clicking on their titles. Items within categories can be reordered by dragging them to new positions.</p>
+    </div>
+
+    <div class="row">
+        <!-- Items Section -->
+        <div class="col-md-3">
+            <h3 class="container-title">Items</h3>
+            <div id="items-container" class="category-container">
+                <div class="dropzone" id="uncategorized">
+                    <div class="item-card" draggable="true">Staff &amp; Liaisons</div>
+                    <div class="item-card" draggable="true">Databases</div>
+                    <div class="item-card" draggable="true">Hours</div>
+                    <div class="item-card" draggable="true">Chat Assistance</div>
+                    <div class="item-card" draggable="true">Course Reserves</div>
+                    <div class="item-card" draggable="true">Library Systems Accessibility</div>
+                    <div class="item-card" draggable="true">Policies</div>
+                    <div class="item-card" draggable="true">Group Study Rooms</div>
+                    <div class="item-card" draggable="true">Mission &amp; History</div>
+                    <div class="item-card" draggable="true">Interlibrary Loan</div>
+                    <div class="item-card" draggable="true">Library Tutorials</div>
+                    <div class="item-card" draggable="true">Sitemap</div>
+                    <div class="item-card" draggable="true">Theses, Dissertations, &amp; Projects</div>
+                    <div class="item-card" draggable="true">Frequently Asked Questions</div>
+                    <div class="item-card" draggable="true">Research Appointments</div>
+                    <div class="item-card" draggable="true">Quick Search</div>
+                    <div class="item-card" draggable="true">Spaces</div>
+                    <div class="item-card" draggable="true">Research Guides</div>
+                    <div class="item-card" draggable="true">Journals</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Section - Split into two columns -->
+        <div class="col-md-9">
+            <h3 class="container-title">Categories <button id="add-category" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add Category</button></h3>
+            
+            <!-- Categories drop area -->
+            <div id="categories-area" class="dropzone-categories">
+                <!-- Two column layout for categories -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="categories-container-left" class="categories-column">
+                            <!-- Categories will be added here dynamically -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="categories-container-right" class="categories-column">
+                            <!-- Categories will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        <!-- Form Questions Section -->
+    <div class="row" id="form-section">
+        <div class="col-md-12">
+	   	  <div id="form-section-button" class="text-center">
+		  	<button type="button" id="submit-results-form" class="btn btn-lg btn-primary">
+                   <i class="fa fa-smile-o"></i> I've finished sorting!
+		  	</button>
+		  </div>
+    <script>
+        $(document).ready(function() {
+            $("#submit-results-form").click(function() {
+                $("#feedback-questions-form").toggle(); // Toggle visibility of the DIV
+            });
+        });
+    </script>
+            <div class="well" id="feedback-questions-form" style="display: none;">
+                <h3 class="container-title">Feedback Questions</h3>
+                <form id="feedback-form">
+                    <div class="form-group">
+                        <label for="categories-description">Please describe the categories you came up with and why you chose them.</label>
+                        <textarea class="form-control" id="categories-description" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="difficult-items">Were there any items that you found confusing or had difficulty categorizing?</label>
+                        <textarea class="form-control" id="difficult-items" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="missing-items">Were there any items missing from the list that you expected to see? If so, how would you categorize them?</label>
+                        <textarea class="form-control" id="missing-items" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="website-feedback">From your experience using the Library Services website, is there anything you find difficulty using or think could be improved?</label>
+                        <textarea class="form-control" id="website-feedback" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="other-comments">Do you have any other comments or questions?</label>
+                        <textarea class="form-control" id="other-comments" rows="2"></textarea>
+                    </div>
+                </form>
+                
+                <div class="text-center">
+                    <button id="submit-results" class="btn btn-lg btn-primary">
+                        <i class="fa fa-paper-plane"></i> Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Submission Confirmation Modal -->
+    <div class="modal fade" id="submission-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Card Sort Results</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="submission-message">
+                        <p>Thank you for participating in the card sort activity!</p>
+                        <p>Your results have been submitted successfully.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Modal -->
+    <div class="modal fade" id="loading-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <p><i class="fa fa-spinner fa-spin fa-3x"></i></p>
+                    <p id="loading-message">Submitting your results...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #862633;
+        --text-color: #333;
+        --background-color: #fff;
+        --card-bg: #D7D2CB;
+        --border-color: #ccc;
+        --highlight-color: #f4e7e9;
+        --edit-hover: #ebe7e4;
+    }
+
+    .item-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: move;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+        position: relative;
+        z-index: 1;
+    }
+
+    .item-card:hover {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    /* Enhanced drop position indicators */
+    .item-card.insert-before {
+        position: relative;
+        margin-top: 20px;
+    }
+    
+    .item-card.insert-before::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--primary-color);
+        border-radius: 3px;
+        pointer-events: none;
+    }
+    
+    .item-card.insert-before::after {
+        content: 'Drop here';
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--primary-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 10px;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+    
+    .item-card.insert-after {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    
+    .item-card.insert-after::before {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--primary-color);
+        border-radius: 3px;
+        pointer-events: none;
+    }
+    
+    .item-card.insert-after::after {
+        content: 'Drop here';
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--primary-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 10px;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .category-container {
+        background-color: var(--background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+        min-height: 100px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .category-title {
+        font-weight: bold;
+        margin: 0;
+        padding: 5px;
+        flex: 1;
+        color: var(--primary-color);
+    }
+
+    .category-title.editable:hover {
+        background-color: var(--edit-hover);
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .container-title {
+        margin-bottom: 15px;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .dropzone {
+        min-height: 50px;
+        padding: 10px 0;
+        position: relative;
+    }
+
+    .dropzone.dragover {
+        background-color: var(--highlight-color);
+        border: 2px dashed var(--primary-color);
+        border-radius: 4px;
+        animation: pulse 1.5s infinite;
+    }
+    
+    /* Empty dropzone placeholder */
+    .dropzone.dragover::after {
+        content: 'Drop here to add item';
+        display: block;
+        text-align: center;
+        padding: 10px;
+        color: var(--primary-color);
+        font-style: italic;
+        pointer-events: none;
+        font-weight: bold;
+    }
+    
+    /* Categories columns */
+    .categories-column {
+        min-height: 150px;
+        padding: 10px;
+        position: relative;
+    }
+    
+    .categories-column.dragover {
+        background-color: var(--highlight-color);
+        border: 2px dashed var(--primary-color);
+        border-radius: 4px;
+        padding: 8px;
+        animation: pulse 1.5s infinite;
+    }
+    .categories-column.dragover::after {
+        content: 'Drop here to add category';
+        display: block;
+        text-align: center;
+        padding: 10px;
+        color: var(--primary-color);
+        font-style: italic;
+        pointer-events: none;
+        font-weight: bold;
+    }
+    
+    .dropzone-categories {
+        position: relative;
+        min-height: 150px;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+
+     .btn-primary {
+            background-color: #862633 !important;
+            background-image: none !important;
+            border-color: #000;
+            text-shadow: 0 1px 1px rgba(200, 200, 200, .44);
+            -webkit-font-smoothing: antialiased;
+         }
+
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
+            background-color: #862633 !important;
+            filter: brightness(110%);
+        }
+
+    .delete-category {
+        color: #000;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+
+    .category-input {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid var(--border-color);
+        border-radius: 3px;
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+
+    .instructions {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: var(--card-bg);
+        border-radius: 4px;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    /* Form styles */
+    #form-section {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .well {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 1.42857143;
+    }
+    
+    textarea.form-control {
+        resize: vertical;
+    }
+    
+    #submit-results {
+        margin-top: 20px;
+        padding: 10px 25px;
+    }
+
+    /* Small devices adjustments */
+    @media (max-width: 767px) {
+        .category-container {
+            margin-bottom: 15px;
+        }
+        
+        .item-card {
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+    }
+
+    /* Error message styling */
+    .alert-danger {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    /* Success message styling */
+    .alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        // Initialize drag and drop functionality
+        initDragAndDrop();
+        
+        // Add category button
+        $('#add-category').click(function() {
+            createCategory();
+        });
+        
+        // Set up the categories area to handle direct drops
+        setupCategoriesAreaDrops();
+
+        // Randomize items on load
+        randomizeItems();
+        
+        // Submit button click handler
+        $('#submit-results').click(function() {
+            submitResults();
+        });
+    });
+    
+    // API credentials - in production these would be stored securely
+    const API_CONFIG = {
+        client_id: '162APP-004',
+        client_secret: 'fcb9be5240309692095629674f897d45',
+        base_url: 'https://springfield.libanswers.com/api/1.1',
+        quid: 306,
+        pemail: 'amartel5@springfieldcollege.edu'
+    };
+    
+    // Function to get OAuth token
+    async function getAccessToken() {
+        try {
+            const tokenUrl = `${API_CONFIG.base_url}/oauth/token`;
+            const formData = new URLSearchParams();
+            formData.append('client_id', API_CONFIG.client_id);
+            formData.append('client_secret', API_CONFIG.client_secret);
+            formData.append('grant_type', 'client_credentials');
+
+            const response = await fetch(tokenUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`Token request failed with status ${response.status}`);
+            }
+
+            const tokenData = await response.json();
+            return tokenData.access_token;
+        } catch (error) {
+            console.error('Error getting access token:', error);
+            throw error;
+        }
+    }
+
+
+    async function submitResultsToApi(formattedData) {
+        try {
+            const accessToken = await getAccessToken();
+            const submitUrl = `${API_CONFIG.base_url}/ticket/create`;
+
+            const formData = new URLSearchParams();
+            formData.append('client_id', API_CONFIG.client_id);
+            formData.append('client_secret', API_CONFIG.client_secret);
+            formData.append('quid', API_CONFIG.quid);
+            formData.append('pquestion', 'Card Sort Results');
+            formData.append('pdetails', formattedData);
+            formData.append('pemail', API_CONFIG.pemail);
+
+            const response = await fetch(submitUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Submission failed with status ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error submitting results:', error);
+            throw error;
+        }
+    }
+    
+    // Function to submit the card sort results via API
+    async function submitResults() {
+        const categories = collectCategories();
+        const formResponses = {
+            categoriesDescription: $('#categories-description').val(),
+            difficultItems: $('#difficult-items').val(),
+            missingItems: $('#missing-items').val(),
+            websiteFeedback: $('#website-feedback').val(),
+            otherComments: $('#other-comments').val()
+        };
+
+        const formattedData = formatSubmissionData(categories, formResponses);
+
+        try {
+            await submitResultsToApi(formattedData);
+            $('#submission-message').html(`
+                <div class="alert alert-success">
+                    <p><strong>Success!</strong> Your card sort results have been submitted.</p>
+                </div>
+            `);
+            $('#submission-modal').modal('show');
+        } catch (error) {
+            $('#submission-message').html(`
+                <div class="alert alert-danger">
+                    <p><strong>Error:</strong> There was a problem submitting your results.</p>
+                    <p>Error details: ${error.message}</p>
+                </div>
+                <p>Please try again later.</p>
+            `);
+            $('#submission-modal').modal('show');
+        }
+    }
+    
+    // Function to format data for submission
+    function formatSubmissionData(categories, formResponses) {
+        let formattedData = "CARD SORT RESULTS\n\n";
+        
+        // Add categories and items
+        formattedData += "CATEGORIES:\n";
+        categories.forEach(category => {
+            formattedData += `\n${category.name}:\n`;
+            category.items.forEach(item => {
+                formattedData += `- ${item}\n`;
+            });
+        });
+        
+        // Add form responses
+        formattedData += "\n\nFEEDBACK RESPONSES:\n\n";
+        
+        formattedData += "1. Please describe the categories you came up with and why you chose them:\n";
+        formattedData += formResponses.categoriesDescription + "\n\n";
+        
+        formattedData += "2. Were there any items that you found confusing or had difficulty categorizing?\n";
+        formattedData += formResponses.difficultItems + "\n\n";
+        
+        formattedData += "3. Were there any items missing from the list that you expected to see? If so, how would you categorize them?\n";
+        formattedData += formResponses.missingItems + "\n\n";
+        
+        formattedData += "4. From your experience using the Library Services website, is there anything you find difficulty using or think could be improved?\n";
+        formattedData += formResponses.websiteFeedback + "\n\n";
+        
+        formattedData += "5. Do you have any other comments or questions?\n";
+        formattedData += formResponses.otherComments;
+        
+        return formattedData;
+    }
+    
+    // Function to collect all categories and their items
+    function collectCategories() {
+        const categories = [];
+        
+        // Get all category containers
+        const categoryContainers = document.querySelectorAll('#categories-container-left .category-container, #categories-container-right .category-container');
+        
+        categoryContainers.forEach(container => {
+            const categoryTitle = container.querySelector('.category-title').innerText;
+            const items = [];
+            
+            // Get all items in this category
+            const itemElements = container.querySelectorAll('.item-card');
+            itemElements.forEach(item => {
+                items.push(item.innerText);
+            });
+            
+            categories.push({
+                name: categoryTitle,
+                items: items
+            });
+        });
+        
+        // Get uncategorized items
+        const uncategorizedItems = [];
+        const uncategorizedElements = document.querySelectorAll('#uncategorized .item-card');
+        uncategorizedElements.forEach(item => {
+            uncategorizedItems.push(item.innerText);
+        });
+        
+        if (uncategorizedItems.length > 0) {
+            categories.push({
+                name: "Uncategorized",
+                items: uncategorizedItems
+            });
+        }
+        
+        return categories;
+    }
+
+    function initDragAndDrop() {
+        // Initialize drag for existing items
+        initDraggableItems();
+        
+        // Handle dropzones
+        setupDropZones();
+    }
+
+    function initDraggableItems() {
+        const draggableItems = document.querySelectorAll('.item-card');
+        
+        draggableItems.forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                e.dataTransfer.setData('text/plain', e.target.innerText);
+                e.dataTransfer.setData('sourceId', this.parentNode.id);
+                this.style.opacity = '0.4';
+                
+                // Add a class to show which item is being dragged
+                this.classList.add('being-dragged');
+            });
+            
+            item.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+                this.classList.remove('being-dragged');
+                
+                // Clean up any remaining indicators
+                const allItems = document.querySelectorAll('.item-card');
+                allItems.forEach(item => {
+                    item.classList.remove('insert-before', 'insert-after');
+                });
+                
+                // Remove column highlights
+                document.querySelectorAll('.categories-column').forEach(col => {
+                    col.classList.remove('dragover');
+                });
+                
+                document.getElementById('categories-area').classList.remove('dragover');
+            });
+        });
+    }
+
+    function setupDropZones() {
+        const dropZones = document.querySelectorAll('.dropzone');
+        let insertMarker = null;
+        
+        dropZones.forEach(zone => {
+            // Add dragover event listener
+            zone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                
+                // Check if we're dragging over an item card directly
+                const targetItem = e.target.closest('.item-card');
+                
+                // Remove any existing insert markers
+                const allItems = document.querySelectorAll('.item-card');
+                allItems.forEach(item => {
+                    item.classList.remove('insert-before', 'insert-after');
+                });
+                
+                if (targetItem && !zone.id.includes('uncategorized') && zone.contains(targetItem)) {
+                    // Don't show markers for the item being dragged
+                    if (targetItem.classList.contains('being-dragged')) return;
+                    
+                    // Only show insertion markers for categorized items
+                    
+                    // Determine whether to insert before or after the target item
+                    const rect = targetItem.getBoundingClientRect();
+                    const offsetY = e.clientY - rect.top;
+                    
+                    if (offsetY < rect.height / 2) {
+                        // Insert before
+                        targetItem.classList.add('insert-before');
+                        insertMarker = { element: targetItem, position: 'before' };
+                    } else {
+                        // Insert after
+                        targetItem.classList.add('insert-after');
+                        insertMarker = { element: targetItem, position: 'after' };
+                    }
+                } else {
+                    // Add dragover effect to the dropzone itself
+                    this.classList.add('dragover');
+                    insertMarker = null;
+                }
+            });
+            
+            // Add dragleave event listener
+            zone.addEventListener('dragleave', function(e) {
+                // Only remove effect if leaving the zone entirely
+                if (!e.relatedTarget || !this.contains(e.relatedTarget)) {
+                    this.classList.remove('dragover');
+                    
+                    // Remove any insert markers when leaving the zone
+                    if (!e.relatedTarget || !this.contains(e.relatedTarget)) {
+                        const allItems = document.querySelectorAll('.item-card');
+                        allItems.forEach(item => {
+                            item.classList.remove('insert-before', 'insert-after');
+                        });
+                        insertMarker = null;
+                    }
+                }
+            });
+            
+            // Add drop event listener
+            zone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation(); // Stop event from bubbling up
+                this.classList.remove('dragover');
+                
+                // Remove any insert markers
+                const allItems = document.querySelectorAll('.item-card');
+                allItems.forEach(item => {
+                    item.classList.remove('insert-before', 'insert-after');
+                });
+                
+                const data = e.dataTransfer.getData('text/plain');
+                const sourceId = e.dataTransfer.getData('sourceId');
+                
+                // Don't do anything if dropping in the same container and no specific position
+                if (sourceId === this.id && !insertMarker) return;
+                
+                // Find the original element to remove it
+                const allItemsArray = Array.from(document.querySelectorAll('.item-card'));
+                let originalItem;
+                
+                for (let item of allItemsArray) {
+                    if (item.innerText === data && item.parentNode.id === sourceId) {
+                        originalItem = item;
+                        break;
+                    }
+                }
+                
+                if (originalItem) {
+                    // Create new item card
+                    const newItem = document.createElement('div');
+                    newItem.className = 'item-card';
+                    newItem.draggable = true;
+                    newItem.innerText = data;
+                    
+                    // Add drag event listeners to new item
+                    newItem.addEventListener('dragstart', function(e) {
+                        e.dataTransfer.setData('text/plain', e.target.innerText);
+                        e.dataTransfer.setData('sourceId', this.parentNode.id);
+                        this.style.opacity = '0.4';
+                        this.classList.add('being-dragged');
+                    });
+                    
+                    newItem.addEventListener('dragend', function() {
+                        this.style.opacity = '1';
+                        this.classList.remove('being-dragged');
+                    });
+                    
+                    try {
+                        // Check if the drop is on a drop indicator (near an existing item)
+                        const nearbyItem = e.target.closest('.item-card');
+                        const isBeforeIndicator = nearbyItem && (
+                            nearbyItem.classList.contains('insert-before') || 
+                            e.target.matches('.item-card.insert-before::before') || 
+                            e.target.matches('.item-card.insert-before::after')
+                        );
+                        const isAfterIndicator = nearbyItem && (
+                            nearbyItem.classList.contains('insert-after') || 
+                            e.target.matches('.item-card.insert-after::before') || 
+                            e.target.matches('.item-card.insert-after::after')
+                        );
+                        
+                        // Find the appropriate dropzone
+                        let targetDropzone = this;
+                        if (nearbyItem) {
+                            targetDropzone = nearbyItem.closest('.dropzone');
+                        }
+                        
+                        // Add the new item at the specified position with safety checks
+                        if (insertMarker && insertMarker.element && !targetDropzone.id.includes('uncategorized')) {
+                            const targetParent = insertMarker.element.parentNode;
+                            
+                            if (!targetParent) {
+                                // Fallback if parent is null
+                                targetDropzone.appendChild(newItem);
+                            } else if (insertMarker.position === 'before') {
+                                // Insert before with null check
+                                targetParent.insertBefore(newItem, insertMarker.element);
+                            } else {
+                                // Insert after with null checks
+                                const nextSibling = insertMarker.element.nextSibling;
+                                if (nextSibling) {
+                                    targetParent.insertBefore(newItem, nextSibling);
+                                } else {
+                                    targetParent.appendChild(newItem);
+                                }
+                            }
+                        } else if (isBeforeIndicator) {
+                            // Handle drop on a "before" indicator
+                            targetDropzone.insertBefore(newItem, nearbyItem);
+                        } else if (isAfterIndicator) {
+                            // Handle drop on an "after" indicator
+                            const nextSibling = nearbyItem.nextSibling;
+                            if (nextSibling) {
+                                targetDropzone.insertBefore(newItem, nextSibling);
+                            } else {
+                                targetDropzone.appendChild(newItem);
+                            }
+                        } else {
+                            // Just append to the end of the dropzone
+                            targetDropzone.appendChild(newItem);
+                        }
+                        
+                        // Only remove the original after successful insertion
+                        originalItem.remove();
+                    } catch (err) {
+                        console.error("Error during drag and drop:", err);
+                        // Fallback: just append to dropzone if any error occurs
+                        this.appendChild(newItem);
+                        originalItem.remove();
+                    }
+                }
+                
+                // Reset the insert marker
+                insertMarker = null;
+            });
+        });
+        
+        // Setup the category columns as drop areas
+        setupCategoryColumns();
+    }
+    
+    // Set up the categories columns as drop areas
+    function setupCategoryColumns() {
+        const categoryColumns = document.querySelectorAll('.categories-column');
+        
+        categoryColumns.forEach(column => {
+            column.addEventListener('dragover', function(e) {
+                if (e.target === this || (e.target.parentNode === this && !e.target.classList.contains('category-container'))) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                }
+            });
+            
+            column.addEventListener('dragleave', function(e) {
+                if (!e.relatedTarget || !this.contains(e.relatedTarget)) {
+                    this.classList.remove('dragover');
+                }
+            });
+            
+            column.addEventListener('drop', function(e) {
+                // Only handle drops directly on the column, not on its categories
+                if (e.target.closest('.category-container')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('dragover');
+                
+                const data = e.dataTransfer.getData('text/plain');
+                const sourceId = e.dataTransfer.getData('sourceId');
+                
+                if (!data || !sourceId) {
+                    console.log("Missing drag data");
+                    return;
+                }
+                
+                // Find the original item
+                const allItems = document.querySelectorAll('.item-card');
+                let originalItem;
+                
+                for (let item of allItems) {
+                    if (item.innerText === data && item.parentNode.id === sourceId) {
+                        originalItem = item;
+                        break;
+                    }
+                }
+                
+                if (originalItem) {
+                    try {
+                        // Create new category in this column
+                        createCategoryInColumn(this.id, 'New Category');
+                        
+                        // Get the newly created category's dropzone
+                        const newCategory = this.querySelector('.category-container:last-child');
+                        if (!newCategory) {
+                            console.error("Could not find the new category");
+                            return;
+                        }
+                        
+                        const newDropzone = newCategory.querySelector('.dropzone');
+                        if (!newDropzone) {
+                            console.error("Could not find the new category's dropzone");
+                            return;
+                        }
+                        
+                        // Create new item card in the new category dropzone
+                        const newItem = document.createElement('div');
+                        newItem.className = 'item-card';
+                        newItem.draggable = true;
+                        newItem.innerText = data;
+                        
+                        // Add drag event listeners to new item
+                        newItem.addEventListener('dragstart', function(e) {
+                            e.dataTransfer.setData('text/plain', e.target.innerText);
+                            e.dataTransfer.setData('sourceId', this.parentNode.id);
+                            this.style.opacity = '0.4';
+                            this.classList.add('being-dragged');
+                        });
+                        
+                        newItem.addEventListener('dragend', function() {
+                            this.style.opacity = '1';
+                            this.classList.remove('being-dragged');
+                        });
+                        
+                        // Add the new item to the new category dropzone
+                        newDropzone.appendChild(newItem);
+                        originalItem.remove();
+                        
+                        // Focus on the title to encourage editing
+                        const newTitle = newCategory.querySelector('.category-title');
+                        if (newTitle) {
+                            newTitle.click();
+                        }
+                    } catch (err) {
+                        console.error("Error creating new category:", err);
+                    }
+                }
+            });
+        });
+    }
+
+    function createCategory(title = null) {
+        // Determine which column has fewer categories
+        const leftColumn = document.getElementById('categories-container-left');
+        const rightColumn = document.getElementById('categories-container-right');
+        
+        const leftCount = leftColumn.querySelectorAll('.category-container').length;
+        const rightCount = rightColumn.querySelectorAll('.category-container').length;
+        
+        // Add to the column with fewer categories
+        if (leftCount <= rightCount) {
+            createCategoryInColumn('categories-container-left', title);
+        } else {
+            createCategoryInColumn('categories-container-right', title);
+        }
+    }
+    
+    function createCategoryInColumn(columnId, title = null) {
+        const categoryId = 'category-' + Math.floor(Math.random() * 1000000);
+        const categoryName = title || 'New Category';
+        
+        const categoryHTML = `
+            <div class="category-container">
+                <div class="category-header">
+                    <h4 class="category-title editable">${categoryName}</h4>
+                    <i class="fa fa-times delete-category" aria-hidden="true"></i>
+                </div>
+                <div class="dropzone" id="${categoryId}">
+                    <!-- Items will be dropped here -->
+                </div>
+            </div>
+        `;
+        
+        $(`#${columnId}`).append(categoryHTML);
+        
+        // Setup event listeners for the new category
+        const newCategory = $(`#${columnId} .category-container:last-child`);
+        
+        // Make category title editable
+        newCategory.find('.category-title').click(function() {
+            const title = $(this);
+            const currentText = title.text();
+            
+            const input = $('<input type="text" class="category-input">');
+            input.val(currentText);
+            title.after(input);
+            title.hide();
+            
+            input.focus();
+            
+            // Handle input blur or enter key
+            input.on('blur keyup', function(e) {
+                if (e.type === 'blur' || (e.type === 'keyup' && e.keyCode === 13)) {
+                    const newText = input.val().trim();
+                    if (newText && newText !== currentText) {
+                        title.text(newText);
+                    }
+                    title.show();
+                    input.remove();
+                }
+            });
+        });
+        
+        // Handle delete category
+        newCategory.find('.delete-category').click(function() {
+            const container = $(this).closest('.category-container');
+            const itemsInCategory = container.find('.item-card');
+            
+            // Move items back to uncategorized section
+            if (itemsInCategory.length > 0) {
+                itemsInCategory.each(function() {
+                    // Clone the item to the uncategorized section
+                    const clonedItem = $(this).clone(true);
+                    $('#uncategorized').append(clonedItem);
+                });
+            }
+            
+            // Remove the category
+            container.remove();
+        });
+        
+        // Update drop zones to include the new category
+        setupDropZones();
+    }
+
+    function randomizeItems() {
+        // Get the container
+        const itemsContainer = document.getElementById('uncategorized');
+        const items = Array.from(itemsContainer.querySelectorAll('.item-card'));
+        
+        // Remove all items
+        items.forEach(item => item.remove());
+        
+        // Shuffle the array using Fisher-Yates algorithm
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+        
+        // Add the items back in their randomized order
+        items.forEach(item => itemsContainer.appendChild(item));
+    }
+
+    function setupCategoriesAreaDrops() {
+        // Make the categories container droppable
+        const categoriesArea = document.getElementById('categories-area');
+        
+        // Add dragover event listener
+        categoriesArea.addEventListener('dragover', function(e) {
+            // Only handle dragover on the area itself, not on columns or categories
+            if (e.target === this || (e.target.parentNode === this && !e.target.closest('.categories-column'))) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            }
+        });
+        
+        // Add dragleave event listener
+        categoriesArea.addEventListener('dragleave', function(e) {
+            if (!e.relatedTarget || !this.contains(e.relatedTarget)) {
+                this.classList.remove('dragover');
+            }
+        });
+        
+        // Add drop event listener
+        categoriesArea.addEventListener('drop', function(e) {
+            // If dropping on a column or category, let them handle it
+            if (e.target.closest('.categories-column') || e.target.closest('.category-container')) {
+                return;
+            }
+            
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('dragover');
+            
+            const data = e.dataTransfer.getData('text/plain');
+            const sourceId = e.dataTransfer.getData('sourceId');
+            
+            if (!data || !sourceId) {
+                console.log("Missing drag data");
+                return;
+            }
+            
+            // Find the original element to remove it
+            const allItems = document.querySelectorAll('.item-card');
+            let originalItem;
+            
+            for (let item of allItems) {
+                if (item.innerText === data && item.parentNode.id === sourceId) {
+                    originalItem = item;
+                    break;
+                }
+            }
+            
+            if (originalItem) {
+                // Create a new category and add the item
+                createCategory('New Category');
+                
+                // Find the last created category's dropzone
+                const lastCategory = document.querySelector('.categories-column .category-container:last-child');
+                const newDropzone = lastCategory.querySelector('.dropzone');
+                
+                if (!newDropzone) {
+                    console.error("Could not find the new category's dropzone");
+                    return;
+                }
+                
+                // Create new item card in the new category dropzone
+                const newItem = document.createElement('div');
+                newItem.className = 'item-card';
+                newItem.draggable = true;
+                newItem.innerText = data;
+                
+                // Add drag event listeners to new item
+                newItem.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', e.target.innerText);
+                    e.dataTransfer.setData('sourceId', this.parentNode.id);
+                    this.style.opacity = '0.4';
+                    this.classList.add('being-dragged');
+                });
+                
+                newItem.addEventListener('dragend', function() {
+                    this.style.opacity = '1';
+                    this.classList.remove('being-dragged');
+                });
+                
+                // Add the new item to the new category and remove the original
+                newDropzone.appendChild(newItem);
+                originalItem.remove();
+                
+                // Focus on the title to encourage editing
+                const newTitle = lastCategory.querySelector('.category-title');
+                if (newTitle) {
+                    newTitle.click();
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
